@@ -1,0 +1,651 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <style>
+   
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Портфолио студента — Премиум версия</title>
+
+<style>
+
+/* -------------------------------------------------
+   ГЛОБАЛЬНЫЕ СТИЛИ + НЕОН ФОН
+------------------------------------------------- */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Arial", sans-serif;
+}
+
+:root{
+    --neon:#ff003c;
+    --neon2:#ff4d88;
+    --bg:#0c0c0c;
+}
+
+body{
+    background: radial-gradient(circle at center, #1a1a1a, #0a0a0a 60%);
+    color:white;
+    overflow-x:hidden;
+}
+
+
+
+
+/* -------------------------------------------------
+   СВЕТОВЫЕ ЧАСТИЦЫ НА ФОНЕ
+------------------------------------------------- */
+
+.particles{
+    position:fixed;
+    inset:0;
+    z-index:-10;
+}
+
+.particles span{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:var(--neon);
+    border-radius:50%;
+    animation:float 6s infinite ease-in-out;
+    opacity:0.6;
+    filter:blur(1px);
+}
+
+@keyframes float{
+    0%{transform:translateY(0) scale(1);}
+    50%{transform:translateY(-40px) scale(1.6);}
+    100%{transform:translateY(0) scale(1);}
+}
+
+/* -------------------------------------------------
+   КАСТОМНЫЙ НЕОНОВЫЙ КУРСОР
+------------------------------------------------- */
+
+.cursor-glow{
+    position:fixed;
+    width:200px;
+    height:200px;
+    background:radial-gradient(circle, rgba(255,0,60,0.35), transparent 70%);
+    border-radius:50%;
+    pointer-events:none;
+    transform:translate(-50%, -50%);
+    z-index:1000;
+}
+
+/* -------------------------------------------------
+   LOADER (ПЕРЕД ЗАГРУЗКОЙ САЙТА)
+------------------------------------------------- */
+
+#loader{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:10000;
+}
+
+.loader-ring{
+    width:120px;
+    height:120px;
+    border:6px solid transparent;
+    border-top-color:var(--neon);
+    border-radius:50%;
+    animation:spin 1.3s infinite linear;
+    filter:drop-shadow(0 0 20px var(--neon));
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* -------------------------------------------------
+   АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+------------------------------------------------- */
+
+.reveal{
+    opacity:0;
+    transform:translateY(50px);
+    transition:1s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* -------------------------------------------------
+   ШАПКА + НЕОН + АНИМАЦИЯ
+------------------------------------------------- */
+
+header{
+    padding:60px 20px;
+    text-align:center;
+    position:relative;
+}
+
+header h1{
+    font-size:50px;
+    font-weight:900;
+    text-shadow:0 0 25px var(--neon);
+}
+
+header h1::after{
+    content:"";
+    display:block;
+    width:180px;
+    height:4px;
+    background:var(--neon);
+    margin:10px auto;
+    border-radius:10px;
+    box-shadow:0 0 25px var(--neon);
+}
+
+/* -------------------------------------------------
+   БУРГЕР-МЕНЮ ДЛЯ МОБИЛКИ
+------------------------------------------------- */
+
+.burger{
+    display:none;
+    width:40px;
+    height:30px;
+    margin:20px auto;
+    flex-direction:column;
+    justify-content:space-between;
+    cursor:pointer;
+}
+
+.burger span{
+    display:block;
+    height:5px;
+    background:white;
+    border-radius:5px;
+    transition:0.4s;
+    box-shadow:0 0 12px var(--neon);
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    justify-content:center;
+    gap:35px;
+    margin-top:20px;
+}
+
+nav a{
+    color:white;
+    font-weight:bold;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+nav a:hover{
+    text-shadow:0 0 15px var(--neon2);
+}
+
+/* -------------------------------------------------
+   БЛОК "О СЕБЕ"
+------------------------------------------------- */
+
+.about{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    padding:70px 40px;
+}
+
+.about img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:3px solid var(--neon);
+    box-shadow:0 0 20px var(--neon);
+}
+
+/* -------------------------------------------------
+   ПРОЕКТЫ С УЛЬТРА-НЕОНОМ
+------------------------------------------------- */
+
+.projects{
+    padding:80px 20px;
+    text-align:space-between;
+}
+
+.projects h2{
+    font-size:38px;
+    margin-bottom:30px;
+    text-shadow:0 0 20px var(--neon);
+}
+
+.project-cards{
+    display:flex;
+    gap:30px;
+    justify-content:space-between;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:300px;
+    background:#151515;
+    padding:20px;
+    border-radius:15px;
+    position:relative;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+/* Неоновая рамка */
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg, var(--neon), var(--neon2));
+    z-index:-1;
+    filter:blur(25px);
+    opacity:0;
+    transition:0.4s;
+}
+
+.card:hover::before{
+    opacity:1;
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+    box-shadow:0 0 30px var(--neon);
+}
+
+/* -------------------------------------------------
+   КНОПКИ
+------------------------------------------------- */
+
+button{
+    padding:12px 20px;
+    font-size:16px;
+    background:var(--neon);
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+    margin-top:10px;
+    font-weight:bold;
+    box-shadow:0 0 18px var(--neon);
+}
+
+button:hover{
+    background:var(--neon2);
+    transform:scale(1.05);
+}
+
+/* -------------------------------------------------
+   КОНТАКТЫ
+------------------------------------------------- */
+
+.contact{
+    padding:60px;
+    text-align:center;
+    background:#101010;
+}
+
+/* -------------------------------------------------
+   АДАПТИВ
+------------------------------------------------- */
+
+@media(max-width:768px){
+    .about{
+        flex-direction:column;
+        text-align:center;
+    }
+    nav ul{
+        display:none;
+        flex-direction:column;
+        gap:20px;
+    }
+    .burger{
+        display:flex;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<!-- НЕОНОВЫЕ ЧАСТИЦЫ -->
+<div class="particles">
+    <span style="top:20%; left:10%; animation-delay:0s;"></span>
+    <span style="top:50%; left:30%; animation-delay:1s;"></span>
+    <span style="top:70%; left:80%; animation-delay:2s;"></span>
+    <span style="top:40%; left:60%; animation-delay:3s;"></span>
+    <span style="top:85%; left:20%; animation-delay:4s;"></span>
+</div>
+
+<!-- КУРСОР-СВЕТ -->
+<div class="cursor-glow"></div>
+
+<!-- ЛОАДЕР -->
+<div id="loader">
+    <div class="loader-ring"></div>
+</div>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="circleBox">
+    <h1>FOZILDESIGN</h1>
+</div>
+
+<style>
+.circleBox{
+    width:250px;
+    height:250px;
+    margin:40px auto;
+    border-radius:50%;
+    border:4px solid #ff0066;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 0 40px #ff0066 inset, 0 0 40px #ff0066;
+    animation:circlePulse 3s infinite ease-in-out;
+}
+
+.circleBox h2{
+    font-size:50px;
+    color:white;
+    text-shadow:0 0 12px #ff0066;
+}
+
+@keyframes circlePulse{
+    0%,100%{box-shadow:0 0 25px #ff0066 inset,0 0 25px #ff0066;}
+    50%{box-shadow:0 0 45px #ff00aa inset,0 0 45px #ff00aa;}
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="reveal">
+    
+<h1 class="neon">Партфолио студента</h1> 
+<style>
+.neon{
+    font-size:60px;
+    font-weight:900;
+    color:#ff004c;
+    text-shadow:
+        0 0 10px #ff004c,
+        0 0 25px #ff004c,
+        0 0 50px #ff004c,
+        0 0 120px #ff004c;
+    font-family:Arial, sans-serif;
+    animation:neonPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes neonPulse{
+    0%{text-shadow:0 0 8px #ff004c,0 0 20px #ff004c;}
+    50%{text-shadow:0 0 20px #ff004c,0 0 60px #ff004c;}
+    100%{text-shadow:0 0 8px #ff004c,0 0 20px #ff004c;}
+}
+</style>
+
+    <div class="burger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="#about">Обо мне</a></li>
+            <li><a href="#projects">Проекты</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section id="about" class="about reveal">
+    <img src="002.jpg">
+    <div>
+        <h1 class="glassText">FOZIL DESIGN</h1>
+
+<style>
+.glassText{
+    font-size:70px;
+    color:white;
+    font-weight:900;
+    letter-spacing:4px;
+    text-shadow:
+        1px 1px 0 #ccc,
+        2px 2px 0 #bbb,
+        3px 3px 0 #aaa,
+        4px 4px 0 #999,
+        5px 5px 15px rgba(0,0,0,0.4);
+}
+</style>
+
+
+        <p>Ман Соҳибов Фозил соли 2014 ба мактаби № 20 ба синфи аввал рафтам.Соли 2025 мактаби 19-ро хатм кардам ва худи ҳамон сол ба
+                Донишгоҳи давлатии ҳуқуқ бизнес ва сиёсати Тоҷикистон дар рӯйи ихтисоси Веб-дизайн дохил шудам. </p>
+    </div>
+</section>
+
+<section id="projects" class="projects reveal">
+    <h2>Фаъолиятҳои ман</h2>
+
+    <div class="project-cards">
+
+        <div class="card reveal">
+            
+<h2 class="fire">СОХТИ ДРОН</h2>
+
+<style>
+.fire{
+    font-size:70px;
+    color:#ff3a00;
+    font-weight:900;
+    text-shadow:
+        0 0 10px #ff3a00,
+        0 0 20px #ff6a00,
+        0 0 35px #ffa200,
+        0 0 60px #ffd000;
+    animation:firePulse 2s infinite;
+}
+
+@keyframes firePulse{
+    0%{filter:hue-rotate(0deg);}
+    50%{filter:hue-rotate(25deg);}
+    100%{filter:hue-rotate(0deg);}
+}
+</style>
+            <video width="260" controls>
+                <source src="89.mp4" type="video/mp4">
+            </video>
+            <p>Ман аз бозичаҳои нолозима ва 
+                шикаста дрон барои пошидани дору
+                сохтам.Дрони ман аз чор мотори қувватдор иборат аст, ки метавонад
+                дар ҳаво устувор парвоз кунад.Дрон бо истифодаи технологияи GPS
+                 роҳнамоӣ мешавад ва метавонад дар масофаи дур кор кунад.Дар поени дрон кути об чойгир шудааст, ки доруҳоро нигоҳ медорад.Вақте ки дрон ба макони муайян мерасад, он метавонад доруҳоро ба таври дақиқ пошад.</p>
+            <button>Бисёртар донистан</button>
+        </div>
+
+        <div class="card reveal">
+            
+<h2 class="fire">ИНСТАГРАМ</h2>
+
+<style>
+.fire{
+    font-size:70px;
+    color:#ff3a00;
+    font-weight:900;
+    text-shadow:
+        0 0 10px #ff3a00,
+        0 0 20px #ff6a00,
+        0 0 35px #ffa200,
+        0 0 60px #ffd000;
+    animation:firePulse 2s infinite;
+}
+
+@keyframes firePulse{
+    0%{filter:hue-rotate(0deg);}
+    50%{filter:hue-rotate(25deg);}
+    100%{filter:hue-rotate(0deg);}
+}
+</style>
+            <video width="260" controls>
+                <source src="99.mp4" type="video/mp4">
+            </video>
+            <p>Боз дар шабакаҳои иҷтимои ба мисли инстаграм ва телеграм фаолият мебарам.Дар он чо 1264 обуначи дорам дар он чо корҳои худро иегузорам, агар шумоҳам хоҳед дар бораи ман бисертар донед силкаи поенро пахш кунед. </p>
+           </p>
+            <a href="https://www.instagram.com/sohibov7/?_pwa=1">
+                <button>Бисёртар донистан</button>
+            </a>
+        </div>
+
+        <div class="card reveal">
+            
+<h2 class="fire">FIGMA</h2>
+
+<style>
+.fire{
+    font-size:70px;
+    color:#ff3a00;
+    font-weight:900;
+    text-shadow:
+        0 0 10px #ff3a00,
+        0 0 20px #ff6a00,
+        0 0 35px #ffa200,
+        0 0 60px #ffd000;
+    animation:firePulse 2s infinite;
+}
+
+@keyframes firePulse{
+    0%{filter:hue-rotate(0deg);}
+    50%{filter:hue-rotate(25deg);}
+    100%{filter:hue-rotate(0deg);}
+}
+</style>
+            <video width="260" controls>
+                <source src="101.mp4" type="video/mp4">
+            </video>
+            <p>Дар барномаи Figma  низ кор мекунам ба дониши барои сохтани карточкаҳо висуализатсия барои веб саҳифа ва дигароҳоро дорам ва кор мекунам дар видео тарзи сохтани протфолио дар бораи китобро нишон додаам.</p>
+            </p>
+            <button>Бисёртар донистан</button>
+        </div>
+
+    </div>
+</section>
+
+<section id="contact" class="contact reveal">
+    <h2>Контакты</h2>
+    <p>Email: fozilsohibov07@gmail.com</p>
+    <p>Телефон: +992 78 557 07 00</p>
+</section>
+
+<script>
+
+/* ----------------------------  
+   НЕОН КУРСОР
+----------------------------- */
+
+document.addEventListener("mousemove", e => {
+    const cursor = document.querySelector(".cursor-glow");
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
+});
+
+/* ----------------------------  
+   REVEAL ПРИ СКРОЛЛЕ
+----------------------------- */
+
+function reveal(){
+    document.querySelectorAll(".reveal").forEach(el=>{
+        const top = el.getBoundingClientRect().top;
+        if(top < window.innerHeight - 120){
+            el.classList.add("active");
+        }
+    });
+}
+window.addEventListener("scroll", reveal);
+reveal();
+
+/* ----------------------------  
+   LOADER
+----------------------------- */
+
+window.onload = ()=>{
+    setTimeout(()=>{
+        document.getElementById("loader").style.opacity = "0";
+        setTimeout(()=>{
+            document.getElementById("loader").style.display = "none";
+        },500);
+    },800);
+};
+
+/* ----------------------------  
+   БУРГЕР-МЕНЮ
+----------------------------- */
+
+function toggleMenu(){
+    let menu = document.querySelector("nav ul");
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
+
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
